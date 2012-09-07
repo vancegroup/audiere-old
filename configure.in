@@ -126,49 +126,6 @@ AC_CHECK_LIB(audio, alNewConfig,
     EXTRA_LIBS="-laudio $EXTRA_LIBS")
 AM_CONDITIONAL(HAVE_AL, test "x$HAVE_AL" = "xtrue")
 
-dnl Look for wxWindows
-AC_PATH_PROG(WX_CONFIG, wx-config, no, $PATH:/usr/local/bin)
-if [[ "$WX_CONFIG" = "no" ]] ; then
-    AC_MSG_WARN([wxWindows not found, not building wxPlayer.
-        See http://www.wxwindows.org/])
-else
-    old_CXXFLAGS="$CXXFLAGS"
-    old_LIBS="$LIBS"
-    WXFLAGS=`$WX_CONFIG --cxxflags`
-    WXLIBS=`$WX_CONFIG --libs`
-    CXXFLAGS="$WXFLAGS $CXXFLAGS"
-    LIBS="$WXLIBS $LIBS"
-
-    AC_MSG_CHECKING(if small wxWindows application links)
-    AC_LINK_IFELSE(AC_LANG_SOURCE([
-        #include <wx/wx.h>
-        class App : public wxApp {
-        public:
-          bool OnInit() {
-            return false;
-          }
-        };
-        IMPLEMENT_APP(App)
-        ])
-    ,
-        AC_MSG_RESULT(yes)
-        HAVE_WXWINDOWS=true
-        AC_DEFINE(HAVE_WXWINDOWS)
-        WX_LIBS=`$WX_CONFIG --libs`
-        WX_CPPFLAGS=`$WX_CONFIG --cxxflags`
-        AC_SUBST(WX_LIBS)
-        AC_SUBST(WX_CPPFLAGS)
-    ,
-        AC_MSG_RESULT(no)
-        AC_MSG_WARN([wx-config found but linking with wxWindows failed.
-Maybe wxWindows was compiled with another compiler?]))
-
-    CXXFLAGS="$old_CXXFLAGS"
-    LIBS="$old_LIBS"
-fi
-
-AM_CONDITIONAL(HAVE_WXWINDOWS, test "x$HAVE_WXWINDOWS" = "xtrue")
-
 dnl Checks for header files.
 
 AC_HEADER_STDC
