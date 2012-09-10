@@ -75,6 +75,9 @@ if test "x$GCC" = "xyes" ; then
    CFLAGS="$CFLAGS -Wall -Wno-non-virtual-dtor"
 fi
 
+AC_CONFIG_MACRO_DIR([m4])
+AM_CONDITIONAL(HAVE_WXWINDOWS, false)
+
 dnl Look for pthreads
 if test "x$win32" = "xno";then
   AC_CHECK_LIB(pthread, pthread_create,
